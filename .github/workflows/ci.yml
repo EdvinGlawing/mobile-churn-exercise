@@ -3,19 +3,37 @@ name: CI
 on: push
 
 jobs:
-  allt:
+  test:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
     steps:
       - uses: actions/checkout@v7
 
       - uses: actions/setup-python@v7
         with:
-          python-version: "3.13"
+          python-version: ${{ matrix.python-version }}
           cache: pip
           cache-dependency-path: pyproject.toml
 
       - run: pip install -e . pytest
 
       - run: pytest
+
+  train:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"   # samma version som servern
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - run: pip install -e .
 
       - run: python -m churn.model
