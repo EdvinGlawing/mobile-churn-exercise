@@ -1,7 +1,5 @@
 """Testnivå 3: modell. Kontrakt och reproducerbarhet."""
 
-import json
-from pathlib import Path
 
 import numpy as np
 import pytest
@@ -30,7 +28,9 @@ def test_reproducerbar(resultat):
     assert igen == matvarden
 
 
-def test_senaste_traningen_ar_godkand():
-    # Lades till efter förra incidenten: kolla att senaste träningen har ett rimligt ROC AUC.
-    matvarden = json.loads(Path("outputs/matvarden.json").read_text())
+def test_traning_ger_godkant_roc_auc(resultat):
+    # Lades till efter förra incidenten: träningen ska ge ett rimligt ROC AUC.
+    # Använder färsk träning i stället för outputs/matvarden.json, som bara finns
+    # om någon råkat köra churn.model tidigare.
+    _, matvarden = resultat
     assert matvarden["roc_auc"] >= 0.70
