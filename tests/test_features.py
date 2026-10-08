@@ -26,6 +26,27 @@ def test_region_normaliseras(liten_df):
     assert skapa_features(liten_df)["region"].tolist() == ["Stockholm", "Väst"]
 
 
+@pytest.mark.parametrize(
+    "indata, forvantat",
+    [
+        ("STOCKHOLM", "Stockholm"),
+        ("stockholm", "Stockholm"),
+        ("StOcKhOlM", "Stockholm"),
+        ("VÄST", "Väst"),
+        ("  VÄST  ", "Väst"),
+    ],
+)
+def test_region_med_olika_skiftlage_normaliseras(indata, forvantat):
+    df = pd.DataFrame(
+        {
+            "manadskostnad": [299.0],
+            "data_gb_per_manad": [9.0],
+            "region": [indata],
+        }
+    )
+    assert skapa_features(df)["region"].iloc[0] == forvantat
+
+
 def test_indata_andras_inte(liten_df):
     original = liten_df.copy()
     skapa_features(liten_df)
