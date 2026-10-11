@@ -1,6 +1,10 @@
 name: CI
 
-on: push
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
   test:
@@ -47,6 +51,8 @@ jobs:
   utvardera:
     needs: train
     runs-on: ubuntu-latest
+    env:
+      MIN_ROC_AUC: "0.99"
     steps:
       - uses: actions/checkout@v7
 
