@@ -1,6 +1,22 @@
 name: CI
 
-on: push
+on:
+  push:
+    branches: [main]
+    paths:
+      - "src/**"
+      - "tests/**"
+      - "data/**"
+      - "pyproject.toml"
+      - ".github/workflows/**"
+  pull_request:
+    branches: [main]
+    paths:
+      - "src/**"
+      - "tests/**"
+      - "data/**"
+      - "pyproject.toml"
+      - ".github/workflows/**"
 
 jobs:
   test:
