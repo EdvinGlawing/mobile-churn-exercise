@@ -13,7 +13,7 @@ import sys
 from pathlib import Path
 
 STANDARDTROSKEL = 0.70
-
+# test
 
 def main(argv: list[str] | None = None) -> int:
     argv = sys.argv[1:] if argv is None else argv
