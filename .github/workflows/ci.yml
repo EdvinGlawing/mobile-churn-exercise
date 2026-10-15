@@ -7,6 +7,7 @@ on:
       - "src/**"
       - "tests/**"
       - "data/**"
+      - "kontroller/**"
       - "pyproject.toml"
       - ".github/**"
   pull_request:
@@ -15,6 +16,7 @@ on:
       - "src/**"
       - "tests/**"
       - "data/**"
+      - "kontroller/**"
       - "pyproject.toml"
       - ".github/**"
   schedule:
@@ -23,6 +25,11 @@ on:
     - cron: "0 4 * * 1"
     - cron: "0 5 * * 1"
   workflow_dispatch:
+    inputs:
+      datafil:
+        description: Datafil i data/ som ska kontrolleras
+        default: kundbas.csv
+        type: string
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
@@ -44,6 +51,19 @@ jobs:
             echo "kor=false" >> "$GITHUB_OUTPUT"
           fi
 
+  datakontroll:
+    needs: tidskontroll
+    if: needs.tidskontroll.outputs.kor == 'true'
+    runs-on: ubuntu-latest
+    env:
+      DATAFIL: ${{ inputs.datafil || 'kundbas.csv' }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/installera
+        with:
+          extra-paket: pandera
+      - run: python kontroller/schema.py "data/$DATAFIL"
+
   test:
     needs: tidskontroll
     if: needs.tidskontroll.outputs.kor == 'true'
@@ -61,7 +81,7 @@ jobs:
       - run: pytest
 
   train:
-    needs: test
+    needs: [test, datakontroll]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
