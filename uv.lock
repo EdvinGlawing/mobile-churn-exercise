@@ -29,6 +29,7 @@ source = { editable = "." }
 dependencies = [
     { name = "joblib" },
     { name = "pandas" },
+    { name = "pandera" },
     { name = "scikit-learn" },
 ]
 
@@ -46,6 +47,7 @@ dev = [
 requires-dist = [
     { name = "joblib", specifier = ">=1.4" },
     { name = "pandas", specifier = ">=2.2" },
+    { name = "pandera", specifier = ">=0.34.1" },
     { name = "pandera", marker = "extra == 'data'", specifier = ">=0.24" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=8" },
     { name = "pytest-cov", marker = "extra == 'dev'", specifier = ">=5" },
